@@ -194,6 +194,28 @@ void save_file(){
     }
 }
 
+void load_file(){
+    FILE *file = NULL;
+    file = fopen(".hist_list.txt","r");
+    if(file==NULL){
+        printf("This file does not seem to exist");
+        exit(1);
+    }else{
+         char historyLine[512];
+         int i=0;
+         
+        while(fgets(historyLine, 512, file) != NULL&& i<21) {
+    
+    strcpy(commands[i],historyLine);
+         
+                printf( "%s",commands[i]);
+           i++;
+         
+    }
+    fclose(file);
+    }
+}
+
 
 int execute(char * tokens[]){
 char * token =tokens[0] ;
