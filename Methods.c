@@ -34,6 +34,8 @@ void enterIntoArray(char input [512]){
                 strcpy(commands[i], commands[i+1]);
             }
             strcpy(commands[19], input);
+            fullLoop = 1;
+
 
         } else {
             strcpy(commands[count], input);
@@ -93,22 +95,67 @@ int parse(char input [512]){
         execute(tokens);
     }
     else if(strcmp(tokens[0], "!!") ==0 ){
-        printf("\n %s", commands[count-2]);
-        parse(commands[count-1]);
-    
+        if (count ==19){
+            parse(commands[count]);
         }
-        else if(strcmp(tokens[0], "history") ==0 ){
-        for (int i = 0; i<20; i++){
-            printf("\n %d : %s",i+1 ,commands[i]);
+        else if (count != 0){
+            parse(commands[count-1]);
         }
-        /*for (int i = 19; i<0; i--){
-            printf("\n %d : %s",i+1 ,commands[i]);
-        }*/
-        printf("\n");
-    
+        else{
+            perror("Command not Found");
         }
-    else if(strcmp(tokens[0], "!") ==0 ){
-        parse(commands[tokens]);
+    }
+    else if(strcmp(tokens[0], "history") ==0 ){
+        if(tokens[1] != NULL){
+            printf("Error: Too many parameters\n");
+        }
+        else if (count == 0){
+            printf("Error: No history\n");
+        }
+        else if (fullLoop == 1){
+            for (int i = 0; i<20; i++){
+                printf("%d  %s",i+1 ,commands[i]);
+            }
+        }
+        else{
+            for (int i = 0; i<count; i++){
+                printf("%d  %s",i+1 ,commands[i]);
+            }
+            
+        }
+    }
+    else if(strncmp(tokens[0], "!", 1) ==0 ){
+        char *ptr;
+        int no = strtol((tokens[0]+1), &ptr ,10);
+        int printed = 0;
+        if( count < 19){
+            if (no > 0 && no <= count){
+                printed =1;
+                if (printed ==1){
+                    parse(commands[no-1]);
+                }
+            }
+            else if (no < 0 && no >= -count){
+                parse(commands[count+no]);
+            }
+            else{
+                printf("no command at this number");
+            }
+        }
+        else if( count == 19){
+            if(no > 0 && no <= 20){
+                parse(commands[no-1]);
+            }
+            else if (no < 0 && no >= -20){
+                parse(commands[20+no]);
+            }
+            else{
+                printf("number is out of range, please use a number between -20 and 20 that is not 0");
+            }
+        }
+        else{
+            perror("Command not Found"); //might not need this else
+        }
 
 
     }
@@ -137,7 +184,23 @@ int parse(char input [512]){
 }
 
 
+void save_file(){
+    
+    FILE *file =NULL;
+    file= fopen(".hist_list.txt","w");
+    if(file==NULL){
+        printf("This file does not seem to exist");
+        exit(1);
+    }else{
 
+  
+     for (int i = 0; i<count; i++){
+         
+                fprintf(file,"%s" ,commands[i]);
+    }
+    fclose(file);
+    }
+}
 
 
 int execute(char * tokens[]){
@@ -168,6 +231,3 @@ wait(NULL);
 return 0;
 
 }
-
-
-
