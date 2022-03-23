@@ -6,8 +6,7 @@
 
 char commands[19][511];
 int count;
-
-
+int fullLoop;
 void enterIntoArray(char input [512]);
 int parse(char input [512]);
 int reader();
@@ -16,3 +15,4 @@ void setpath(char * tokens[]);
 void currentCWD();
 void cd(char * tokens[]);
 void getpath(char * tokens[]);
+void save_file();
