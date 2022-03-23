@@ -43,6 +43,26 @@ void enterIntoArray(char input [512]){
         }
 
 }
+void load_file(){
+    FILE *file = NULL;
+    file = fopen(".hist_list.txt","r");
+    if(file==NULL){
+        printf("This file does not seem to exist");
+        exit(1);
+    }else{
+         char historyLine[512];
+
+        while(fgets(historyLine, 512, file) != NULL&& i<21) {
+            enterIntoArray(historyLine);
+
+
+
+        
+
+    }
+    fclose(file);
+    }
+}
 void currentCWD(){
 
     printf("The current working directory: %s \n", getcwd(cwd, sizeof(cwd)));;
